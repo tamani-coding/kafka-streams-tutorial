@@ -1,10 +1,8 @@
 package com.example.kafkastreamsapp;
 
+import com.example.model.OrderReturnAggregate;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
-import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
-import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -19,7 +17,7 @@ public class StreamProcessor {
     @StreamListener
     @SendTo(Processor.OUTPUT)
     public KStream<String, OrderReturnAggregate> process(@Input("input1")KStream<String, String>  input1,
-                                         @Input("input2")KStream<String, String>  input2) {
+                                                         @Input("input2")KStream<String, String>  input2) {
 //        input1.foreach( (a,b) -> {
 //            System.out.println("order " + a + " " + b);
 //        });
@@ -33,7 +31,7 @@ public class StreamProcessor {
                                             .builder()
                                             .amountOrders(Integer.valueOf(leftValue))
                                             .amountReturns(Integer.valueOf(rightValue)).build(), /* ValueJoiner */
-                JoinWindows.of(Duration.ofMinutes(1)),
+                JoinWindows.of(Duration.ofMinutes(60)),
                 StreamJoined.with(
                         Serdes.String(), /* key */
                         Serdes.String(),   /* left value */

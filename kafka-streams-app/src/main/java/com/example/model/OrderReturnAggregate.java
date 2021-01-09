@@ -1,4 +1,4 @@
-package com.example.kafkastreamsapp;
+package com.example.model;
 
 import lombok.Builder;
 import lombok.Data;

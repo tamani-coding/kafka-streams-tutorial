@@ -1,10 +1,12 @@
-package com.example.kafkastreamsapp;
+package com.example.kafkastreamssink;
 
+import com.example.model.OrderReturnAggregate;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
+@EnableBinding(Sink.CustomSink.class)
 public class Sink {
 
     @StreamListener(CustomSink.INPUT)

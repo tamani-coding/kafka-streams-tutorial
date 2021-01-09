@@ -18,7 +18,7 @@ public class ReturnTopic {
     @Value(value = "${kafka.topic.return}")
     private String topic;
 
-    @Scheduled(fixedRate=1000)
+    @Scheduled(fixedRate=5000)
     public void checkRecords() {
         System.out.println("sending return ...");
         kafkaTemplate.send(topic, Products.randomProduct(), ThreadLocalRandom.current().nextInt(1, 3));

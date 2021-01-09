@@ -18,7 +18,7 @@ public class OrderProducer {
     @Value(value = "${kafka.topic.order}")
     private String topic;
 
-    @Scheduled(fixedRate=500)
+    @Scheduled(fixedRate=2000)
     public void checkRecords() {
         System.out.println("sending order ...");
         kafkaTemplate.send(topic, Products.randomProduct(), ThreadLocalRandom.current().nextInt(1, 11));
