@@ -2,15 +2,15 @@ package com.example.kafkastreamsapp;
 
 import com.example.model.ViewOrderAggregate;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.messaging.handler.annotation.SendTo;
-
-import java.time.Duration;
 
 @EnableBinding(OrderAndReturnProcessor.class)
 public class StreamProcessor {
