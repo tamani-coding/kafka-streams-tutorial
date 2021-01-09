@@ -18,7 +18,7 @@ public class StreamProcessor {
 
     @StreamListener
     @SendTo(Processor.OUTPUT)
-    public KStream<String, String> process(@Input("input1")KStream<String, String>  input1,
+    public KStream<String, OrderReturnAggregate> process(@Input("input1")KStream<String, String>  input1,
                                          @Input("input2")KStream<String, String>  input2) {
 //        input1.foreach( (a,b) -> {
 //            System.out.println("order " + a + " " + b);
@@ -54,11 +54,11 @@ public class StreamProcessor {
                       },
                       Materialized.as("product-aggregate"));
 
-        ktable.toStream().foreach( (key, value) -> {
-            System.out.println("aggregated " + key + " " + value);
-        });
+//        ktable.toStream().foreach( (key, value) -> {
+//            System.out.println("aggregated " + key + " " + value);
+//        });
 
-        return new StreamsBuilder().stream("test");
+        return ktable.toStream();
     }
 
 }

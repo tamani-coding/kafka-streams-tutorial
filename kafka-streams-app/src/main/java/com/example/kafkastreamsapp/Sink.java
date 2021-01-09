@@ -8,7 +8,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 public class Sink {
 
     @StreamListener(CustomSink.INPUT)
-    public void process(KStream<String, String> input) {
+    public void process(KStream<String, OrderReturnAggregate> input) {
         input.foreach( (a,b) -> {
             System.out.println("sink: " + a + " : " + b);
         });
