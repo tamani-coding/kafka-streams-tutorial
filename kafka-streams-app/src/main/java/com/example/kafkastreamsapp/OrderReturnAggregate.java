@@ -1,14 +1,17 @@
-package com.example.kafkastreamsapp.model;
+package com.example.kafkastreamsapp;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 
 @Data
 @Builder
+
 public class OrderReturnAggregate {
 
-    private String product;
     private int amountOrders;
     private int amountReturns;
 
+    @Tolerate
+    public OrderReturnAggregate() {}
 }
