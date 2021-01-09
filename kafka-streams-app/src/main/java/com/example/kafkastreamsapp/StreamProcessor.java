@@ -26,37 +26,34 @@ public class StreamProcessor {
 //            System.out.println("order " + a + " " + b);
 //        });
 
-        KStream<String, ViewOrderAggregate> joined = input1.leftJoin(input2,
-                (leftValue, rightValue) -> ViewOrderAggregate
-                                            .builder()
-                                            .amountViews(Integer.valueOf(leftValue))
-                                            .amountOrders(rightValue != null ? Integer.valueOf(rightValue) : 0).build(), /* ValueJoiner */
-                JoinWindows.of(Duration.ofMinutes(5)),
-                StreamJoined.with(
-                        Serdes.String(), /* key */
-                        Serdes.String(),   /* left value */
-                        Serdes.String())  /* right value */
-        );
+        KTable<String, Integer> countViews = input1.groupBy((k, v) -> k).aggregate(
+                () -> 0,
+                (key, newValue, aggValue) -> Integer.valueOf(newValue) + aggValue,
+                Materialized.with(Serdes.String(), Serdes.Integer()));
 
-//        joined.foreach( (a, b)  -> {
+//        countViews.toStream().foreach( (a,b) -> {
+//            System.out.println("countViews " + a + " " + b);
+//        });
+
+        KTable<String, Integer> countOrders = input2.groupBy((k, v) -> k).aggregate(
+                () -> 0,
+                (key, newValue, aggValue) -> Integer.valueOf(newValue) + aggValue,
+                Materialized.with(Serdes.String(), Serdes.Integer()));
+
+//        countOrders.toStream().foreach( (a,b) -> {
+//            System.out.println("countOrders " + a + " " + b);
+//        });
+
+        KTable<String, ViewOrderAggregate> joined = countViews.leftJoin(countOrders, (leftValue, rightValue) -> ViewOrderAggregate.builder()
+                        .amountViews(leftValue)
+                        .amountOrders(rightValue != null ? rightValue : 0).build(), /* ValueJoiner */
+                Materialized.as("product-aggregate"));
+
+//        joined.toStream().foreach( (a, b)  -> {
 //            System.out.println("joined: " + a + " " + b.getAmountViews() + " " + b.getAmountOrders());
 //        });
 
-        KTable<String, ViewOrderAggregate> ktable = joined.groupBy( (key, value) -> key)
-              .aggregate(
-                      () -> ViewOrderAggregate.builder().build(),
-                      (key, newValue, aggValue) -> {
-                        return ViewOrderAggregate.builder()
-                                .amountViews(aggValue.getAmountViews() + newValue.getAmountViews())
-                                .amountOrders(aggValue.getAmountOrders() + newValue.getAmountOrders()).build();
-                      },
-                      Materialized.as("product-aggregate"));
-
-//        ktable.toStream().foreach( (key, value) -> {
-//            System.out.println("aggregated " + key + " " + value);
-//        });
-
-        return ktable.toStream();
+        return joined.toStream();
     }
 
 }
