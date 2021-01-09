@@ -7,6 +7,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import java.time.Duration;
@@ -47,7 +48,7 @@ public class StreamProcessor {
         KTable<String, ViewOrderAggregate> joined = countViews.leftJoin(countOrders, (leftValue, rightValue) -> ViewOrderAggregate.builder()
                         .amountViews(leftValue)
                         .amountOrders(rightValue != null ? rightValue : 0).build(), /* ValueJoiner */
-                Materialized.as("product-aggregate"));
+                Materialized.with(Serdes.String(), new JsonSerde<>(ViewOrderAggregate.class)));
 
 //        joined.toStream().foreach( (a, b)  -> {
 //            System.out.println("joined: " + a + " " + b.getAmountViews() + " " + b.getAmountOrders());

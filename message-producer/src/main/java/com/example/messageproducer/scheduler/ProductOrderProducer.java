@@ -18,7 +18,7 @@ public class ProductOrderProducer {
     @Value(value = "${kafka.topic.order}")
     private String topic;
 
-    @Scheduled(fixedRate=15000)
+    @Scheduled(fixedRate=8000)
     public void task() {
         String randomProduct = Products.randomProduct();
         System.out.println("sending product order event ... " + randomProduct);
