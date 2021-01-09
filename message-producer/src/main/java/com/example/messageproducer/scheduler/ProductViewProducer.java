@@ -7,20 +7,19 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 @Service
-public class ReturnTopic {
+public class ProductViewProducer {
 
     @Autowired
     private KafkaTemplate<String, Integer> kafkaTemplate;
 
-    @Value(value = "${kafka.topic.return}")
+    @Value(value = "${kafka.topic.view}")
     private String topic;
 
-    @Scheduled(fixedRate=5000)
-    public void checkRecords() {
-        System.out.println("sending return ...");
-        kafkaTemplate.send(topic, Products.randomProduct(), ThreadLocalRandom.current().nextInt(1, 3));
+    @Scheduled(fixedRate=400)
+    public void task() {
+        String randomProduct = Products.randomProduct();
+        System.out.println("sending product view event... " + randomProduct);
+        kafkaTemplate.send(topic, randomProduct, 1);
     }
 }

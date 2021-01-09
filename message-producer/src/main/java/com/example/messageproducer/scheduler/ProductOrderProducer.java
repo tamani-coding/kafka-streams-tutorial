@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class OrderProducer {
+public class ProductOrderProducer {
 
     @Autowired
     private KafkaTemplate<String, Integer> kafkaTemplate;
@@ -18,9 +18,10 @@ public class OrderProducer {
     @Value(value = "${kafka.topic.order}")
     private String topic;
 
-    @Scheduled(fixedRate=2000)
-    public void checkRecords() {
-        System.out.println("sending order ...");
-        kafkaTemplate.send(topic, Products.randomProduct(), ThreadLocalRandom.current().nextInt(1, 11));
+    @Scheduled(fixedRate=15000)
+    public void task() {
+        String randomProduct = Products.randomProduct();
+        System.out.println("sending product order event ... " + randomProduct);
+        kafkaTemplate.send(topic, randomProduct, 1);
     }
 }

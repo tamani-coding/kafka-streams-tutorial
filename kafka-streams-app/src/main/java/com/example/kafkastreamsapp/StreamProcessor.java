@@ -1,6 +1,6 @@
 package com.example.kafkastreamsapp;
 
-import com.example.model.OrderReturnAggregate;
+import com.example.model.ViewOrderAggregate;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.kstream.*;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -16,22 +16,22 @@ public class StreamProcessor {
 
     @StreamListener
     @SendTo(Processor.OUTPUT)
-    public KStream<String, OrderReturnAggregate> process(@Input("input1")KStream<String, String>  input1,
-                                                         @Input("input2")KStream<String, String>  input2) {
+    public KStream<String, ViewOrderAggregate> process(@Input("input1")KStream<String, String>  input1,
+                                                       @Input("input2")KStream<String, String>  input2) {
 //        input1.foreach( (a,b) -> {
-//            System.out.println("order " + a + " " + b);
+//            System.out.println("view " + a + " " + b);
 //        });
 //
 //        input2.foreach( (a,b) -> {
-//            System.out.println("return " + a + " " + b);
+//            System.out.println("order " + a + " " + b);
 //        });
 
-        KStream<String, OrderReturnAggregate> joined = input1.join(input2,
-                (leftValue, rightValue) -> OrderReturnAggregate
+        KStream<String, ViewOrderAggregate> joined = input1.leftJoin(input2,
+                (leftValue, rightValue) -> ViewOrderAggregate
                                             .builder()
-                                            .amountOrders(Integer.valueOf(leftValue))
-                                            .amountReturns(Integer.valueOf(rightValue)).build(), /* ValueJoiner */
-                JoinWindows.of(Duration.ofMinutes(60)),
+                                            .amountViews(Integer.valueOf(leftValue))
+                                            .amountOrders(rightValue != null ? Integer.valueOf(rightValue) : 0).build(), /* ValueJoiner */
+                JoinWindows.of(Duration.ofMinutes(5)),
                 StreamJoined.with(
                         Serdes.String(), /* key */
                         Serdes.String(),   /* left value */
@@ -39,16 +39,16 @@ public class StreamProcessor {
         );
 
 //        joined.foreach( (a, b)  -> {
-//            System.out.println("joined: " + a + " " + b.getAmountOrders() + " " + b.getAmountReturns());
+//            System.out.println("joined: " + a + " " + b.getAmountViews() + " " + b.getAmountOrders());
 //        });
 
-        KTable<String, OrderReturnAggregate> ktable = joined.groupBy( (key, value) -> key)
+        KTable<String, ViewOrderAggregate> ktable = joined.groupBy( (key, value) -> key)
               .aggregate(
-                      () -> OrderReturnAggregate.builder().build(),
+                      () -> ViewOrderAggregate.builder().build(),
                       (key, newValue, aggValue) -> {
-                        return OrderReturnAggregate.builder()
-                                .amountOrders(aggValue.getAmountOrders() + newValue.getAmountOrders())
-                                .amountReturns(aggValue.getAmountReturns() + newValue.getAmountReturns()).build();
+                        return ViewOrderAggregate.builder()
+                                .amountViews(aggValue.getAmountViews() + newValue.getAmountViews())
+                                .amountOrders(aggValue.getAmountOrders() + newValue.getAmountOrders()).build();
                       },
                       Materialized.as("product-aggregate"));
 
