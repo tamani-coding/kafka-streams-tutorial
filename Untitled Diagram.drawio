@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-01-09T21:20:58.698Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="DvvSaGPK9tSav9poV3Dr" version="14.1.4" type="github" pages="4">
+<mxfile host="app.diagrams.net" modified="2021-01-09T21:29:54.548Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="8_LF6fWDCBZYdV-cDZJf" version="14.1.4" type="github" pages="4">
   <diagram id="0Kt7jfIghzjYdRk8JLpt" name="Page-1">
     <mxGraphModel dx="1986" dy="1007" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -448,8 +448,8 @@
         <mxCell id="MgxEHsio34ENib6Fyo8x-1" value="&lt;font style=&quot;font-size: 45px&quot; face=&quot;Comic Sans MS&quot;&gt;KStream - stream of messages&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;sketch=1;" vertex="1" parent="gbMtKFE9Rb1nhO4mqiTG-1">
           <mxGeometry x="60" y="50" width="910" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="MgxEHsio34ENib6Fyo8x-2" value="&lt;font style=&quot;font-size: 45px&quot; face=&quot;Comic Sans MS&quot;&gt;KTable - stores key-value&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;sketch=1;" vertex="1" parent="gbMtKFE9Rb1nhO4mqiTG-1">
-          <mxGeometry x="60" y="460" width="770" height="20" as="geometry" />
+        <mxCell id="MgxEHsio34ENib6Fyo8x-2" value="&lt;font style=&quot;font-size: 45px&quot; face=&quot;Comic Sans MS&quot;&gt;KTable - aggregate streams, store by key-value&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;sketch=1;" vertex="1" parent="gbMtKFE9Rb1nhO4mqiTG-1">
+          <mxGeometry x="60" y="460" width="1040" height="20" as="geometry" />
         </mxCell>
         <mxCell id="MgxEHsio34ENib6Fyo8x-4" value="" style="endArrow=classic;html=1;strokeWidth=5;sketch=1;" edge="1" parent="gbMtKFE9Rb1nhO4mqiTG-1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
