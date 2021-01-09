@@ -30,6 +30,7 @@ public class StreamProcessor {
 
         KTable<String, Long> count = input2.groupBy((key, aReturn) -> (aReturn.getProduct()))
                 .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"));
+
         return count.toStream();
 
 //        KTable<String, Long> wordCounts = input1
