@@ -20,7 +20,7 @@ public class KafkaStreamsAppApplication {
 
 	@Bean
 	public BiFunction<KStream<String, String>, KStream<String, String>, KStream<String, ViewOrderAggregate>> viewOrderAggregate() {
-		return (input1, input2) -> {
+		return (views, orders) -> {
 			//        input1.foreach( (a,b) -> {
 //            System.out.println("view " + a + " " + b);
 //        });
@@ -29,7 +29,8 @@ public class KafkaStreamsAppApplication {
 //            System.out.println("order " + a + " " + b);
 //        });
 
-			KTable<String, Integer> countViews = input1.groupBy((k, v) -> k).aggregate(
+			// aggregate views per product
+			KTable<String, Integer> countViews = views.groupBy((k, v) -> k).aggregate(
 					() -> 0,
 					(key, newValue, aggValue) -> Integer.valueOf(newValue) + aggValue,
 					Materialized.with(Serdes.String(), Serdes.Integer()));
@@ -38,7 +39,8 @@ public class KafkaStreamsAppApplication {
 //            System.out.println("countViews " + a + " " + b);
 //        });
 
-			KTable<String, Integer> countOrders = input2.groupBy((k, v) -> k).aggregate(
+			// aggregate orders per product
+			KTable<String, Integer> countOrders = orders.groupBy((k, v) -> k).aggregate(
 					() -> 0,
 					(key, newValue, aggValue) -> Integer.valueOf(newValue) + aggValue,
 					Materialized.with(Serdes.String(), Serdes.Integer()));
@@ -47,6 +49,7 @@ public class KafkaStreamsAppApplication {
 //            System.out.println("countOrders " + a + " " + b);
 //        });
 
+			// left join tables
 			KTable<String, ViewOrderAggregate> joined = countViews.leftJoin(countOrders, (leftValue, rightValue) -> ViewOrderAggregate.builder()
 							.amountViews(leftValue)
 							.amountOrders(rightValue != null ? rightValue : 0).build(), /* ValueJoiner */
@@ -56,6 +59,7 @@ public class KafkaStreamsAppApplication {
 //            System.out.println("joined: " + a + " " + b.getAmountViews() + " " + b.getAmountOrders());
 //        });
 
+			// stream joined table
 			return joined.toStream();
 		};
 	}
