@@ -2,14 +2,14 @@ version: '2'
 
 services:
   zookeeper:
-    image: 'bitnami/zookeeper:latest'
+    image: 'bitnami/zookeeper:3.6.2'
     environment:
       - ZOO_ENABLE_PROMETHEUS_METRICS=yes
       - ALLOW_ANONYMOUS_LOGIN=yes
     ports:
       - '7000:7000'
   kafka:
-    image: 'bitnami/kafka:latest'
+    image: 'bitnami/kafka:2.7.0'
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
