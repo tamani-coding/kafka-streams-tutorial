@@ -7,6 +7,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @Service
 public class ProductOrderProducer {
 
@@ -20,6 +22,6 @@ public class ProductOrderProducer {
     public void task() {
         String randomProduct = Products.randomProduct();
         System.out.println("sending product order event ... " + randomProduct);
-        kafkaTemplate.send(topic, randomProduct, 1);
+        kafkaTemplate.send(topic, randomProduct, ThreadLocalRandom.current().nextInt(1,4));
     }
 }
